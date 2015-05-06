@@ -1,0 +1,8 @@
+Django >= 1.7
+python-digitalocean
+oauthlib
+python-social-auth
+xkcdpass
+gunicorn
+psycopg2
+django-bootstrap-form

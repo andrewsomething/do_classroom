@@ -1,0 +1,54 @@
+{% load url from future %}
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>{% block title %}{% trans "DigitalOcean Classroom" %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+<div id="header">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">DO Classroom</a>
+        </div>
+        <div class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <p class="navbar-text">Signed in as: {{ acct.email }}</p>
+                <p class="navbar-text">
+                    <a href="/logout" class="btn btn-primary btn-sm" role="button"> Logout</a>
+                </p>
+            {% else %}
+                <p class="navbar-text">
+                    <a href="{% url 'social:begin' 'digitalocean' %}?next={{ request.path }}" class="btn btn-primary btn-sm" role="button">
+                    <span class="glyphicon glyphicon-tint" aria-hidden="true"></span> Login with DO</a>
+                </p>
+            {% endif %}
+        </div>
+      </div>
+    </nav>
+</div>
+
+<div id="content" class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<div id="footer"></div>
+
+</body>
+
+</html>
+

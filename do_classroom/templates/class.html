@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block extra_head%}
+  {% load staticfiles %}
+  <script src="{% static "js/class.js" %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class='container-fluid'>
+
+    <div class="page-header row">
+      <h1>{{ class.name }}</h1>
+    </div>
+
+    <div class="row">
+      <div id="class-info" class="panel panel-primary">
+          <div class="panel-heading"><strong>Class Information:</strong></div>
+          <ul class="list-group">
+          {% if not class.destroyed_at %}
+              <li class="list-group-item"><strong>Created at:</strong> {{ class.created_at }}</li>
+              <li class="list-group-item"><strong>Image:</strong> {{ class.droplet_image }}</li>
+              <li class="list-group-item"><strong>Size:</strong> {{ class.droplet_size }}</li>
+              <li class="list-group-item"><strong>Region:</strong> {{ class.droplet_region }}</li>
+              <li class="list-group-item"><strong>Packages:</strong> {{ class.packages }}</li
+           {% else %}
+              <li class="list-group-item">This class was ended at: {{ class.destroyed_at }} UTC</li>
+           {% endif %}
+          </ul>
+      </div>
+    </div>
+
+    {% if not class.destroyed_at %}
+    <div class="bs-callout .bs-callout-warning">
+      <h4>Note:</h4>
+      <p>You can connect to your Droplets over SSH using the <code>ubuntu</code> user. You will need to reset the password when you first attempt to login.</p>
+    </div>
+    {% endif %}
+
+    <div id="droplet-list" class="row">
+        <table style="width:100%" class='table table-hover'>
+            <tr>
+                <th>Name</th>
+                <th>IP Address</th>
+                <th>Status</th> 
+                <th>Initial password</th>
+                <th>Console</th>
+                <th>Controls</th>
+            </tr>
+        {% for d in droplets %}
+            <tr id='{{ d.id }}'>
+                <td>{{ d.name }}</td>
+                <td>{{ d.ip_address }}</td>
+                <td><span  class="status">{{ d.status }}</span></td>
+                <td>
+                  <div class="well well-sm panel-info">
+                    {{ d.initial_pass }}
+                  </div>
+                </td>
+                <td>
+                    <a class="btn btn-primary glyphicon glyphicon-console" title="Console" href="https://cloud.digitalocean.com/droplets/{{ d.id }}/console" target="_blank" role="button" aria-hidden="true"></a>
+                </td>
+                <td>
+                  <div class="btn-group" role="group" aria-label="controls">
+                  {% if d.status == 'active' %}
+                    <button type="button" class="power off btn btn-primary" title="Power off">
+                      <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </button>
+                  {% else %}
+                    <button type="button" class="power on btn btn-success" title="Power on">
+                      <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                    </button>
+                  {% endif %}
+                    <button type="button" class="destroy btn btn-danger" title="Destroy">
+                      <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+
+    {% if not class.destroyed_at %}
+    <div id="class-controls row">
+      <button type="button" class="add-droplet btn btn-success btn-lg" title="Add Droplet">
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Droplet
+      </button>
+      <button type="button" class="end-class btn btn-danger btn-lg" title="End class">
+        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> End class
+      </button>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block content %}
+
+<div class="page-header">
+  <h1>Welcome to the DigitalOcean Classroom!</h1>
+</div>
+
+<div class='main'>
+
+{% if user.is_authenticated %}
+    {% if classes %}
+        <table class='table table-hover'>
+            <tr>
+                <th>Class</th>
+                <th>Created at</th>
+                <th>#</th>
+                <th>Droplet size</th>
+            </tr>
+        {% for c in classes %}
+            <tr>
+                <td><a href="class/{{ c.prefix }}">{{ c.name }}</a></td>
+                {% localtime on %}
+                <td>{{ c.created_at }} UTC</td>
+                {% endlocaltime %}
+                <td>{{ c.class_size }}</td>
+                <td>{{ c.droplet_size }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <div class='well'>
+            <p>You haven't created any classes yet.</p>
+            <p>To get started, click the button below and create some droplets.</p>
+        </div>
+    {% endif %}
+
+    <br>
+    <div>
+        <a type="button" class="destroy btn-lg btn-primary" href="class/new">
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+        Create new class...</a>
+    </div>
+{% else %}
+    <div class="well well-lg">
+        <p>The DigitalOcean classroom is a tool built with the DO API that aims to make it simple to spin up multiple droplets all configured the same way in order to teach a class, show something off at a MeetUp, or set up a hack-a-thon.</p>
+        <p>Not sure how you found this. It's very much a work in progress! If you want to take a look, login with your DigitalOcean account below:</p>
+    </div>
+     <a href="{% url 'social:begin' 'digitalocean' %}?next={{ request.path }}" class="btn btn-primary btn-lg" role="button">
+     <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
+     Login with DigitalOcean</a>
+{% endif %}
+
+</div>
+{% endblock %}

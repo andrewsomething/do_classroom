@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block content %}
+
+<div class='container'>
+
+    <div class="page-header">
+      <h1>Create a new class!</h1>
+    </div>
+
+    <div class='main'>
+
+        <form action="#" method="post" role="form">
+            <div class="form-group">
+                {% csrf_token %}
+                {{ form|bootstrap }}
+                {{ form.id }}
+                <input type="submit" class="btn btn-lg btn-primary" value="Create" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}

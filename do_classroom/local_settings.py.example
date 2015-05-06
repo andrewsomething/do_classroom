@@ -1,0 +1,28 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+TEMPLATE_DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
+# Database
+# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+# SQLite will work fine for development. Consider postrgres for production.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'specialuniquesnowflake'
+
+# Your DigitalOcean Developer Applications ID and Secret
+# https://cloud.digitalocean.com/settings/applications/new
+SOCIAL_AUTH_DIGITALOCEAN_KEY = '1234567890QWERTY'
+SOCIAL_AUTH_DIGITALOCEAN_SECRET = 'YTREWQ0987654321'
