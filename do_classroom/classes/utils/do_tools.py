@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from ..models import Teacher, Class, Droplet
 
 import digitalocean
+from digitalocean.baseapi import NotFoundError
 import xkcdpass.xkcd_password as xp
 from datetime import datetime
 import os
@@ -108,7 +109,7 @@ def list_droplets(token, prefix):
 
 def add_droplet(token, class_obj):
     size = class_obj.droplet_size
-    pkgs = apt_packages('git, build-essential')
+    pkgs = apt_packages(class_obj.packages)
     user = 'ubuntu'
     expire = True
     count = class_obj.class_size + 1
@@ -166,9 +167,13 @@ def launch_droplets(request, class_obj):
 def end_class(token, class_obj):
     droplets = Droplet.objects.filter(group=class_obj)
     for d in droplets:
-        droplet = digitalocean.Droplet(token=token, id=d.droplet_id)
-        droplet.destroy()
-    droplets.update(destroyed_at=datetime.now())
+        if not d.destroyed_at:
+            droplet = digitalocean.Droplet(token=token, id=d.droplet_id)
+            try:
+                droplet.destroy()
+                droplets.update(destroyed_at=datetime.now())
+            except NotFoundError:
+                pass
     class_obj.destroyed_at = datetime.now()
     class_obj.save()
 
